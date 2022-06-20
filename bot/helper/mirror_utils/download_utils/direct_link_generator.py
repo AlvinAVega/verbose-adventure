@@ -35,8 +35,6 @@ def direct_link_generator(link: str):
         return zippy_share(link)
     elif 'yadi.sk' in link or 'disk.yandex.com' in link:
         return yandex_disk(link)
-    elif 'mediafire.com' in link:
-        return mediafire(link)
     elif 'uptobox.com' in link:
         return uptobox(link)
     elif 'osdn.net' in link:
@@ -115,16 +113,6 @@ def uptobox(url: str) -> str:
             result = req.json()
             dl_url = result['data']['dlLink']
     return dl_url
-
-def mediafire(url: str) -> str:
-    """ MediaFire direct link generator """
-    try:
-        link = re_findall(r'\bhttps?://.*mediafire\.com\S+', url)[0]
-    except IndexError:
-        raise DirectDownloadLinkException("No MediaFire links found\n")
-    page = BeautifulSoup(rget(link).content, 'lxml')
-    info = page.find('a', {'aria-label': 'Download file'})
-    return info.get('href')
 
 def osdn(url: str) -> str:
     """ OSDN direct link generator """
